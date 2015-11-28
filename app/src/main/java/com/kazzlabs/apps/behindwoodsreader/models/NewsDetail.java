@@ -13,13 +13,20 @@ public class NewsDetail {
 
     private String article;
 
-    public NewsDetail(Bitmap image, String article) {
+    private String title;
+
+    public NewsDetail(String title, Bitmap image, String article) {
         this.image = image;
         this.article = article;
+        this.title = title;
     }
 
     public Bitmap getImage() {
         return image;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getArticle() {

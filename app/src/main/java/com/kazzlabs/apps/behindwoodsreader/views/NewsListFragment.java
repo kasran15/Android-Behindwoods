@@ -26,7 +26,7 @@ import java.util.Arrays;
  *
  * Created by kasturip on 8/9/14.
  */
-public class NewsListFragment extends Fragment implements IAsyncCallback<JSONArray>, AdapterView.OnItemClickListener {
+public class NewsListFragment extends android.support.v4.app.Fragment implements IAsyncCallback<JSONArray>, AdapterView.OnItemClickListener {
 
     private ListView mNewsListView;
 
@@ -89,11 +89,11 @@ public class NewsListFragment extends Fragment implements IAsyncCallback<JSONArr
         Log.v("", "Position of the click is " + position);
         if (mHandler != null) {
             NewsItem item = (NewsItem) adapterView.getItemAtPosition(position);
-            mHandler.onNewsItemClicked(item);
+            mHandler.onNewsItemClicked(item, position);
         }
     }
 
     public interface NewsItemClickHandler {
-        public void onNewsItemClicked(NewsItem item);
+        public void onNewsItemClicked(NewsItem item, int index);
     }
 }

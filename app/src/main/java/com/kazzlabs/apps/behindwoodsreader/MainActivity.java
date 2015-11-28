@@ -1,18 +1,17 @@
 package com.kazzlabs.apps.behindwoodsreader;
 
-import android.app.Activity;
-
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 
 import com.kazzlabs.apps.behindwoodsreader.models.NewsItem;
 import com.kazzlabs.apps.behindwoodsreader.views.NavigationDrawerFragment;
@@ -20,7 +19,7 @@ import com.kazzlabs.apps.behindwoodsreader.views.NewsFragment;
 import com.kazzlabs.apps.behindwoodsreader.views.NewsListFragment;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, NewsListFragment.NewsItemClickHandler {
 
     /**
@@ -34,13 +33,15 @@ public class MainActivity extends Activity
     private CharSequence mTitle;
     private NewsListFragment mNewsListFragment;
 
+    private NewsPagerActivity pagerFragment = new NewsPagerActivity();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mTitle = getTitle();
 
@@ -53,7 +54,7 @@ public class MainActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (position == 0) {
             fragmentManager.beginTransaction()
@@ -107,31 +108,24 @@ public class MainActivity extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onNewsItemClicked(NewsItem item) {
+    public void onNewsItemClicked(NewsItem item, int index) {
         Log.v(MainActivity.class.getSimpleName(), "Registered click");
-        NewsFragment fragment = new NewsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("link", item.getLink());
-        fragment.setArguments(bundle);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .addToBackStack("news")
-                .commit();
+
+        Intent i = new Intent(this, NewsPagerActivity.class);
+        i.putExtra("index", index);
+        startActivity(i);
     }
 
     /**
      * A placeholder fragment containing a simple view.
      * This is for the unimplemented navigation sections.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends android.support.v4.app.Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -156,8 +150,7 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override

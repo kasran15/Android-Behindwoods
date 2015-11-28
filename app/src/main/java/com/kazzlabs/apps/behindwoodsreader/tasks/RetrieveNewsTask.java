@@ -31,6 +31,8 @@ public class RetrieveNewsTask extends AsyncTask<String, Void, NewsDetail> {
     protected NewsDetail doInBackground(String... params) {
         JSONObject newsObject = null;
         String newsLink = params[0];
+        String title = params[1];
+        Log.v(this.getClass().getSimpleName(), "Title: " + title);
         NewsDetail news = null;
 
         try {
@@ -68,7 +70,7 @@ public class RetrieveNewsTask extends AsyncTask<String, Void, NewsDetail> {
 
             String imageURL = "http://www.behindwoods.com/tamil-movies-cinema-news-15/" + newsObject.getString("image");
             Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(imageURL).getContent());
-            news = new NewsDetail(bitmap, newsObject.getString("article"));
+            news = new NewsDetail(title, bitmap, newsObject.getString("article"));
 
         } catch (Exception e) {
             Log.e("", e.getMessage());
